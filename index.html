@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Click the Number Game</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: sans-serif;
+      padding: 40px;
+    }
+
+    canvas {
+      border: 1px solid #ccc;
+      margin-top: 20px;
+    }
+
+    #message {
+      font-size: 20px;
+      margin-top: 20px;
+    }
+
+    #levelDisplay, #livesDisplay, #targetDisplay {
+      font-size: 24px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Click the Number!</h1>
+  <div id="levelDisplay">Level: 1</div>
+  <div id="livesDisplay">Lives: ❤️❤️❤️</div>
+  <div id="targetDisplay">Target Number: ?</div>
+
+  <canvas id="numberLine" width="600" height="100"></canvas>
+  <div id="message"></div>
+
+  <script>
+    const canvas = document.getElementById("numberLine");
+    const ctx = canvas.getContext("2d");
+    const message = document.getElementById("message");
+    const levelDisplay = document.getElementById("levelDisplay");
+    const livesDisplay = document.getElementById("livesDisplay");
+    const targetDisplay = document.getElementById("targetDisplay");
+
+    const margin = 50;
+    const lineStart = margin;
+    const lineEnd = canvas.width - margin;
+    const numberSpacing = (lineEnd - lineStart) / 9;
+
+    let level = 1;
+    let lives = 3;
+    let targetNumber = generateTargetNumber();
+
+    function generateTargetNumber() {
+      let number;
+      number = Math.floor(Math.random() * 10) + 1;
+      targetDisplay.textContent = `Target Number: ${number}`;
+      return number;
+    }
+
+    function updateLevelDisplay() {
+      levelDisplay.textContent = `Level: ${level}`;
+    }
+
+    function updateLivesDisplay() {
+      const hearts = "❤️".repeat(lives) + "🖤".repeat(3 - lives);
+      livesDisplay.textContent = `Lives: ${hearts}`;
+    }
+
+    function drawLine() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw number line
+      ctx.beginPath();
+      ctx.moveTo(lineStart, 50);
+      ctx.lineTo(lineEnd, 50);
+      ctx.strokeStyle = "#000";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Draw tick marks and labels
+      for (let i = 0; i < 10; i++) {
+        const x = lineStart + i * numberSpacing;
+        ctx.beginPath();
+        ctx.moveTo(x, 45);
+        ctx.lineTo(x, 55);
+        ctx.stroke();
+
+        ctx.font = "16px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(i + 1, x, 75);
+      }
+    }
+
+    canvas.addEventListener("click", (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+
+      const relativeX = (x - lineStart) / (lineEnd - lineStart);
+      const clickedValue = relativeX * 9 + 1;
+
+	  let guessed;
+      if (level <= 5) {
+        guessed = Math.round(clickedValue);
+      } else {
+		guessed = clickedValue;
+      }
+
+      let correct;
+      correct = guessed === targetNumber;
+
+      if (correct) {
+        level++;
+        message.textContent = `✅ Correct!`;
+        message.style.color = 'green';
+      } else {
+        lives--;
+        message.style.color = 'red';
+
+        if (lives === 0) {
+          level = 1;
+          lives = 3;
+          message.textContent = `💀 Wrong! No lives left. Back to level 1.`;
+        } else {
+			message.textContent = `❌ Wrong! You clicked on ${guessed}. You lost a life.`;
+        }
+      }
+
+      updateLevelDisplay();
+      updateLivesDisplay();
+      targetNumber = generateTargetNumber();
+      drawLine();
+    });
+
+    // Initial setup
+    updateLevelDisplay();
+    updateLivesDisplay();
+    drawLine();
+  </script>
+
+</body>
+</html>
+
