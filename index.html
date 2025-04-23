@@ -50,7 +50,7 @@
     const numberSpacing = (lineEnd - lineStart) / 9;
 
     let level = 1;
-    let lives = 10;
+    let lives = 5;
     let targetNumber = generateTargetNumber();
 
     function generateTargetNumber() {
@@ -65,7 +65,7 @@
     }
 
     function updateLivesDisplay() {
-      const hearts = "❤️".repeat(lives) + "🖤".repeat(10 - lives);
+      const hearts = "❤️".repeat(lives) + "🖤".repeat(5 - lives);
       livesDisplay.textContent = `Lives: ${hearts}`;
     }
 
@@ -121,7 +121,7 @@
 
         if (lives === 0) {
           level = 1;
-          lives = 10;
+          lives = 5;
           message.textContent = `💀 Wrong! No lives left. Back to level 1.`;
         } else {
 			message.textContent = `❌ Wrong! You clicked on ${guessed}. You lost a life.`;
