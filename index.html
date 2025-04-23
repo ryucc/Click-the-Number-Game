@@ -50,7 +50,7 @@
     const numberSpacing = (lineEnd - lineStart) / 9;
 
     let level = 1;
-    let lives = 3;
+    let lives = 10;
     let targetNumber = generateTargetNumber();
 
     function generateTargetNumber() {
@@ -121,7 +121,7 @@
 
         if (lives === 0) {
           level = 1;
-          lives = 3;
+          lives = 10;
           message.textContent = `💀 Wrong! No lives left. Back to level 1.`;
         } else {
 			message.textContent = `❌ Wrong! You clicked on ${guessed}. You lost a life.`;
